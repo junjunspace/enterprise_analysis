@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业洞察模块</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f5f6f8;
+            padding: 20px;
+        }
+        
+        .insight-panel {
+            width: 420px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        
+        .panel-header {
+            padding: 16px 20px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .panel-title::before {
+            content: "💡";
+            font-size: 20px;
+        }
+        
+        .close-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .panel-body {
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+        
+        /* 一级标题样式 */
+        .section {
+            border-bottom: 8px solid #f5f6f8;
+            padding: 20px;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+        
+        /* 二级标题样式 */
+        .subsection {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #fafafa;
+            border-radius: 6px;
+        }
+        
+        .subsection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .subsection-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .subsection-badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            background: #e8e8e8;
+            color: #666;
+        }
+        
+        .subsection-content {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* 企业画像 */
+        .company-profile {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+        }
+        
+        .profile-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        
+        .profile-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .profile-description {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* 发展趋势 - 特定样式 */
+        .stage-badge {
+            background: #1890ff;
+            color: white;
+        }
+        
+        .trend-expanding {
+            background: #e6f7e6;
+            color: #52c41a;
+        }
+        
+        .trend-stable {
+            background: #fff7e6;
+            color: #fa8c16;
+        }
+        
+        .trend-shrinking {
+            background: #ffebe6;
+            color: #ff4d4f;
+        }
+        
+        .distribution-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .dist-row {
+            display: flex;
+            align-items: center;
+        }
+        
+        .dist-label {
+            font-size: 12px;
+            color: #999;
+            width: 70px;
+        }
+        
+        .dist-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        
+        .tag {
+            padding: 2px 8px;
+            background: #e8e8e8;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .tag.blue {
+            background: #e6f7ff;
+            color: #1890ff;
+        }
+        
+        .tag.orange {
+            background: #fff7e6;
+            color: #fa8c16;
+        }
+        
+        .news-list {
+            margin-top: 8px;
+        }
+        
+        .news-item {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.8;
+            padding-left: 16px;
+            position: relative;
+        }
+        
+        .news-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #fa8c16;
+        }
+        
+        /* 合作关系 - 特定样式 */
+        .contact-stats {
+            display: flex;
+            gap: 20px;
+            padding: 8px 12px;
+            background: #f0f8ff;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .stat-value {
+            color: #1890ff;
+            font-weight: 600;
+        }
+        
+        .recent-visit {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 16px;
+        }
+        
+        .cooperation-list {
+            background: white;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .cooperation-item {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .cooperation-item:last-child {
+            border-bottom: none;
+        }
+        
+        .coop-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .coop-header:hover {
+            background: #fafafa;
+        }
+        
+        .coop-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .coop-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .coop-status {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .status-active {
+            background: #e6f7e6;
+            color: #52c41a;
+        }
+        
+        .status-inactive {
+            background: #fff7e6;
+            color: #fa8c16;
+        }
+        
+        .status-stopped {
+            background: #ffebe6;
+            color: #ff4d4f;
+        }
+        
+        .coop-arrow {
+            color: #999;
+            transition: transform 0.3s;
+        }
+        
+        .coop-arrow.expanded {
+            transform: rotate(90deg);
+        }
+        
+        .coop-details {
+            padding: 0 12px 12px 12px;
+            display: none;
+            background: #fafafa;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        .coop-details.show {
+            display: block;
+        }
+        
+        .detail-item {
+            margin-bottom: 4px;
+        }
+        
+        .detail-label {
+            color: #999;
+            margin-right: 8px;
+        }
+        
+        /* 付费能力 - 特定样式 */
+        .probability-high {
+            background: #e6f7e6;
+            color: #52c41a;
+        }
+        
+        .probability-medium {
+            background: #fff7e6;
+            color: #fa8c16;
+        }
+        
+        .probability-low {
+            background: #ffebe6;
+            color: #ff4d4f;
+        }
+        
+        .financial-healthy {
+            background: #52c41a;
+            color: white;
+        }
+        
+        .financial-good {
+            background: #1890ff;
+            color: white;
+        }
+        
+        .financial-normal {
+            background: #fa8c16;
+            color: white;
+        }
+        
+        .financial-metrics {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .metric-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .metric-icon {
+            font-size: 16px;
+            margin-top: 2px;
+            color: #1890ff;
+            font-weight: bold;
+        }
+        
+        .metric-content {
+            flex: 1;
+        }
+        
+        .metric-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .metric-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        /* BD策略建议 */
+        .strategy-content {
+            background: #fff7e6;
+            border: 1px solid #ffd591;
+            padding: 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .strategy-content strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+        
+        .strategy-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 8px 16px;
+            border: 1px solid #d9d9d9;
+            background: white;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            border-color: #1890ff;
+            color: #1890ff;
+        }
+        
+        .action-btn.primary {
+            background: #1890ff;
+            color: white;
+            border-color: #1890ff;
+        }
+        
+        .action-btn.primary:hover {
+            background: #40a9ff;
+        }
+        
+        /* 滚动条样式 */
+        .panel-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .panel-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        .panel-body::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+        
+        .panel-body::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="insight-panel">
+        <div class="panel-header">
+            <div class="panel-title">企业洞察</div>
+            <button class="close-btn">×</button>
+        </div>
+        
+        <div class="panel-body">
+            <!-- 一、企业画像 -->
+            <div class="section">
+                <div class="section-title">🎯 企业画像</div>
+                <div class="company-profile">
+                    <div class="profile-badges">
+                        <span class="profile-badge">独角兽</span>
+                        <span class="profile-badge">消费电子</span>
+                        <span class="profile-badge">1000-10000人</span>
+                        <span class="profile-badge">C轮</span>
+                        <span class="profile-badge">估值10亿美元+</span>
+                    </div>
+                    <div class="profile-description">
+                        追觅科技是消费电子赛道的独角兽企业，主要产品包括智能清洁机器人、吸尘器等智能家居设备。公司处于快速扩张阶段，研发实力强劲，在全球市场占有重要地位。
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 二、发展趋势 -->
+            <div class="section">
+                <div class="section-title">📈 发展趋势</div>
+                
+                <!-- 企业发展阶段 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-title">企业发展阶段</span>
+                        <span class="subsection-badge stage-badge">成熟期</span>
+                    </div>
+                    <div class="subsection-content">
+                        企业规模1000-10000人，最新轮次C轮，已进入规模化扩张阶段，产品线成熟，市场份额稳定增长
+                    </div>
+                </div>
+                
+                <!-- 招聘趋势 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-title">招聘趋势</span>
+                        <span class="subsection-badge trend-expanding">招聘扩张中</span>
+                    </div>
+                    <div class="subsection-content">
+                        企业共有78个在招职位，近半年发布趋势整体增长45%，主要集中在研发和市场岗位的扩招
+                    </div>
+                </div>
+                
+                <!-- 招聘分布 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-title">招聘分布</span>
+                    </div>
+                    <div class="subsection-content">
+                        <div class="distribution-grid">
+                            <div class="dist-row">
+                                <span class="dist-label">职类分布：</span>
+                                <div class="dist-tags">
+                                    <span class="tag blue">技术研发(65%)</span>
+                                    <span class="tag blue">产品经理(15%)</span>
+                                    <span class="tag blue">市场营销(12%)</span>
+                                </div>
+                            </div>
+                            <div class="dist-row">
+                                <span class="dist-label">城市分布：</span>
+                                <div class="dist-tags">
+                                    <span class="tag orange">苏州(45%)</span>
+                                    <span class="tag orange">上海(30%)</span>
+                                    <span class="tag orange">深圳(25%)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 战略动向 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-title">战略动向</span>
+                    </div>
+                    <div class="subsection-content">
+                        <div class="news-list">
+                            <div class="news-item">追觅科技完成新一轮C轮融资，估值超10亿美元，将加大全球市场扩张</div>
+                            <div class="news-item">公司宣布在苏州建立新研发中心，计划招募200+技术人才</div>
+                            <div class="news-item">与京东达成战略合作，加速智能家居产品在中国市场的渗透</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 三、合作关系 -->
+            <div class="section">
+                <div class="section-title">🤝 合作关系</div>
+                
+                <!-- 联系人和拜访统计（弱化） -->
+                <div class="contact-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">14</span>
+                        <span>位联系人</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">33</span>
+                        <span>条拜访记录</span>
+                    </div>
+                </div>
+                
+                <div class="recent-visit">
+                    最近拜访：2025-03-14 Shawn Yan(闫威)
+                </div>
+                
+                <!-- 合作交付现状（可展开收起） -->
+                <div class="cooperation-list">
+                    <div class="cooperation-item">
+                        <div class="coop-header" onclick="toggleCoop(this)">
+                            <div class="coop-title">
+                                <span class="coop-name">CC业务线</span>
+                                <span class="coop-status status-active">合作中</span>
+                            </div>
+                            <span class="coop-arrow">▶</span>
+                        </div>
+                        <div class="coop-details">
+                            <div class="detail-item">
+                                <span class="detail-label">合作状态：</span>合作中
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">共1个合同：</span>猎头招聘合同
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">最晚有效期：</span>2025-09-01 Lucy Xu(许洁璐)
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">职位状态：</span>职位进行中
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cooperation-item">
+                        <div class="coop-header" onclick="toggleCoop(this)">
+                            <div class="coop-title">
+                                <span class="coop-name">Staffing业务线</span>
+                                <span class="coop-status status-inactive">无合作</span>
+                            </div>
+                            <span class="coop-arrow">▶</span>
+                        </div>
+                        <div class="coop-details">
+                            <div class="detail-item">
+                                <span class="detail-label">职位交付状态：</span>职位进行中
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">共2个职位：</span>高端技术职位、零售
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cooperation-item">
+                        <div class="coop-header" onclick="toggleCoop(this)">
+                            <div class="coop-title">
+                                <span class="coop-name">RPO业务线</span>
+                                <span class="coop-status status-stopped">合作中断</span>
+                            </div>
+                            <span class="coop-arrow">▶</span>
+                        </div>
+                        <div class="coop-details">
+                            <div class="detail-item">
+                                <span class="detail-label">中断原因：</span>项目已完成
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">历史成果：</span>成功交付15个职位
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 四、付费能力 -->
+            <div class="section">
+                <div class="section-title">💰 付费能力</div>
+                
+                <!-- 人服机构使用概率 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-title">人服机构使用概率</span>
+                        <span class="subsection-badge probability-high">极高</span>
+                    </div>
+                    <div class="subsection-content">
+                        <div style="margin-bottom: 10px;">
+                            经过预测，企业有<a href="#" style="color: #1890ff; text-decoration: underline; font-weight: 600;">23个</a>人服机构正在合作中。
+                        </div>
+                        <div class="distribution-grid">
+                            <div class="dist-row">
+                                <span class="dist-label">主要职类：</span>
+                                <div class="dist-tags">
+                                    <span class="tag blue">产品研发(30%)</span>
+                                    <span class="tag blue">财务(20%)</span>
+                                    <span class="tag blue">人事(20%)</span>
+                                </div>
+                            </div>
+                            <div class="dist-row">
+                                <span class="dist-label">主要城市：</span>
+                                <div class="dist-tags">
+                                    <span class="tag orange">苏州(45%)</span>
+                                    <span class="tag orange">上海(30%)</span>
+                                    <span class="tag orange">深圳(10%)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px; font-size: 11px; color: #999; font-style: italic;">
+                            说明：基于企业与人服机构的历史合作情况，结合算法和大数据分析，预测出的信息
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 企业财务状况 -->
+                <div class="subsection">
+                    <div class="subsection-header">
+                        <span class="subsection-title">企业财务状况</span>
+                        <span class="subsection-badge financial-healthy">稳健</span>
+                    </div>
+                    <div class="subsection-content">
+                        <div class="financial-metrics">
+                            <div class="metric-item">
+                                <span class="metric-icon">▪</span>
+                                <div class="metric-content">
+                                    <div class="metric-title">收入增长快</div>
+                                    <div class="metric-desc">年增长率超过50%，营收规模持续扩大</div>
+                                </div>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-icon">▪</span>
+                                <div class="metric-content">
+                                    <div class="metric-title">资本实力强</div>
+                                    <div class="metric-desc">2021~2022年完成超过50亿融资，背后有红杉资本、高瓴资本等知名投资机构支持</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 五、BD策略建议 -->
+            <div class="section">
+                <div class="section-title">🎯 BD策略建议</div>
+                <div class="strategy-content">
+                    <strong>重点突破建议：</strong>
+                    1. 优先推进RPO项目合作，该企业正处于快速扩张期，有大量招聘需求<br>
+                    2. 可从技术岗位切入，建立信任关系，研发类职位占比65%且平均薪资较高<br>
+                    3. 关注竞对华为、小米的人才流动，可做定向挖猎服务<br>
+                    4. 建议联系HR总监 Matt Dong，已有良好合作基础，可深化合作关系
+                </div>
+                <div style="text-align: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e8e8e8;">
+                    <span style="font-size: 12px; color: #999;">内容由AI生成，仅供参考</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 展开收起功能
+        function toggleCoop(element) {
+            const details = element.nextElementSibling;
+            const arrow = element.querySelector('.coop-arrow');
+            
+            if (details.classList.contains('show')) {
+                details.classList.remove('show');
+                arrow.classList.remove('expanded');
+            } else {
+                details.classList.add('show');
+                arrow.classList.add('expanded');
+            }
+        }
+        
+        // 关闭按钮
+        document.querySelector('.close-btn').addEventListener('click', () => {
+            document.querySelector('.insight-panel').style.display = 'none';
+        });
+        
+        // 人服机构数量点击事件
+        document.querySelectorAll('a[href="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('查看人服机构详情');
+                // 这里可以弹出详情窗口或跳转到相关页面
+            });
+        });
+    </script>
+</body>
+</html>
