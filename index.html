@@ -234,6 +234,10 @@
             line-height: 1.8;
             padding-left: 16px;
             position: relative;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
         }
         
         .news-item::before {
@@ -241,6 +245,34 @@
             position: absolute;
             left: 0;
             color: #fa8c16;
+            top: 0;
+        }
+        
+        .news-content {
+            flex: 1;
+        }
+        
+        .news-reference {
+            background: #f0f0f0;
+            color: #666;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            margin-top: 1px;
+            border: 1px solid #d9d9d9;
+            min-width: 16px;
+            text-align: center;
+        }
+        
+        .news-reference:hover {
+            background: #e6f7ff;
+            color: #1890ff;
+            border-color: #91d5ff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         /* 折线图样式 */
@@ -736,9 +768,15 @@
                     </div>
                     <div class="subsection-content">
                         <div class="news-list">
-                            <div class="news-item">追觅科技完成新一轮C轮融资，估值超10亿美元，将加大全球市场扩张</div>
-                            <div class="news-item">公司宣布在苏州建立新研发中心，计划招募200+技术人才</div>
-                            <div class="news-item">与京东达成战略合作，加速智能家居产品在中国市场的渗透</div>
+                            <div class="news-item">
+                                追觅科技完成新一轮C轮融资，估值超10亿美元，将加大全球市场扩张<span class="news-reference" data-url="https://www.example1.com" onclick="openReference(this)">1</span>
+                            </div>
+                            <div class="news-item">
+                                公司宣布在苏州建立新研发中心，计划招募200+技术人才<span class="news-reference" data-url="https://www.example2.com" onclick="openReference(this)">2</span>
+                            </div>
+                            <div class="news-item">
+                                与京东达成战略合作，加速智能家居产品在中国市场的渗透<span class="news-reference" data-url="https://www.example3.com" onclick="openReference(this)">3</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -922,6 +960,15 @@
     </div>
     
     <script>
+        // 打开引用链接
+        function openReference(element) {
+            const url = element.getAttribute('data-url');
+            if (url) {
+                window.open(url, '_blank');
+                console.log('打开引用链接：' + url);
+            }
+        }
+        
         // 展开收起功能
         function toggleCoop(element) {
             const details = element.nextElementSibling;
@@ -958,4 +1005,3 @@
     </script>
 </body>
 </html>
-                                
