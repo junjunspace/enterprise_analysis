@@ -219,6 +219,11 @@
             color: #fa8c16;
         }
         
+        .tag.green {
+            background: #f6ffed;
+            color: #52c41a;
+        }
+        
         .news-list {
             margin-top: 8px;
         }
@@ -236,6 +241,65 @@
             position: absolute;
             left: 0;
             color: #fa8c16;
+        }
+        
+        /* 折线图样式 */
+        .chart-container {
+            width: 100%;
+            height: 200px;
+            margin-top: 12px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e8e8e8;
+            position: relative;
+        }
+        
+        .chart-title {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            padding: 10px 0 5px 0;
+            font-weight: 500;
+        }
+        
+        .chart-area {
+            width: calc(100% - 40px);
+            height: 140px;
+            margin: 0 20px 20px 20px;
+            position: relative;
+            border-left: 1px solid #e8e8e8;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        
+        .chart-line {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .chart-line svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .chart-labels {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 10px;
+            color: #999;
+        }
+        
+        .y-axis-labels {
+            position: absolute;
+            left: -15px;
+            top: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column-reverse;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #999;
         }
         
         /* 合作关系 - 特定样式 */
@@ -265,6 +329,7 @@
             font-size: 12px;
             color: #999;
             margin-bottom: 16px;
+            line-height: 1.5;
         }
         
         .cooperation-list {
@@ -360,7 +425,7 @@
         }
         
         /* 付费能力 - 特定样式 */
-        .probability-high {
+        .probability-confirmed {
             background: #e6f7e6;
             color: #52c41a;
         }
@@ -438,10 +503,57 @@
             color: #333;
         }
         
-        .strategy-content strong {
-            display: block;
-            margin-bottom: 8px;
-            color: #1a1a1a;
+        .strategy-list {
+            margin: 0;
+            padding-left: 0;
+            list-style: none;
+        }
+        
+        .strategy-item {
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .strategy-item::before {
+            content: "●";
+            color: #fa8c16;
+            font-size: 14px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .strategy-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .team-positions {
+            background: #f0f8ff;
+            border: 1px solid #d6e7ff;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #333;
+        }
+        
+        .positions-text {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .positions-link {
+            color: #1890ff;
+            text-decoration: underline;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .positions-link:hover {
+            color: #40a9ff;
         }
         
         .strategy-actions {
@@ -543,6 +655,42 @@
                     </div>
                     <div class="subsection-content">
                         企业共有78个在招职位，近半年发布趋势整体增长45%，主要集中在研发和市场岗位的扩招
+                        
+                        <!-- 新增折线图 -->
+                        <div class="chart-container">
+                            <div class="chart-title">近6个月整体招聘趋势</div>
+                            <div class="chart-area">
+                                <div class="y-axis-labels">
+                                    <span>100</span>
+                                    <span>75</span>
+                                    <span>50</span>
+                                    <span>25</span>
+                                    <span>0</span>
+                                </div>
+                                <div class="chart-line">
+                                    <svg>
+                                        <polyline points="10,120 70,100 130,85 190,75 250,60 310,45" 
+                                                  fill="none" 
+                                                  stroke="#1890ff" 
+                                                  stroke-width="2"/>
+                                        <circle cx="10" cy="120" r="3" fill="#1890ff"/>
+                                        <circle cx="70" cy="100" r="3" fill="#1890ff"/>
+                                        <circle cx="130" cy="85" r="3" fill="#1890ff"/>
+                                        <circle cx="190" cy="75" r="3" fill="#1890ff"/>
+                                        <circle cx="250" cy="60" r="3" fill="#1890ff"/>
+                                        <circle cx="310" cy="45" r="3" fill="#1890ff"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="chart-labels">
+                                <span>10月</span>
+                                <span>11月</span>
+                                <span>12月</span>
+                                <span>1月</span>
+                                <span>2月</span>
+                                <span>3月</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -554,7 +702,7 @@
                     <div class="subsection-content">
                         <div class="distribution-grid">
                             <div class="dist-row">
-                                <span class="dist-label">职类分布：</span>
+                                <span class="dist-label">主要职类：</span>
                                 <div class="dist-tags">
                                     <span class="tag blue">技术研发(65%)</span>
                                     <span class="tag blue">产品经理(15%)</span>
@@ -562,11 +710,19 @@
                                 </div>
                             </div>
                             <div class="dist-row">
-                                <span class="dist-label">城市分布：</span>
+                                <span class="dist-label">主要城市：</span>
                                 <div class="dist-tags">
                                     <span class="tag orange">苏州(45%)</span>
                                     <span class="tag orange">上海(30%)</span>
                                     <span class="tag orange">深圳(25%)</span>
+                                </div>
+                            </div>
+                            <div class="dist-row">
+                                <span class="dist-label">主要薪资：</span>
+                                <div class="dist-tags">
+                                    <span class="tag green">15-25K(35%)</span>
+                                    <span class="tag green">25-35K(40%)</span>
+                                    <span class="tag green">35K+(25%)</span>
                                 </div>
                             </div>
                         </div>
@@ -605,7 +761,8 @@
                 </div>
                 
                 <div class="recent-visit">
-                    最近拜访：2025-03-14 Shawn Yan(闫威)
+                    最近拜访：2025-03-14 Shawn Yan(闫娟)<br>
+                    拜访主题：客户初访
                 </div>
                 
                 <!-- 合作交付现状（可展开收起） -->
@@ -626,7 +783,7 @@
                                 <span class="detail-label">共1个合同：</span>猎头招聘合同
                             </div>
                             <div class="detail-item">
-                                <span class="detail-label">最晚有效期：</span>2025-09-01 Lucy Xu(许洁璐)
+                                <span class="detail-label">最晚有效期：</span>2025-09-01 Lucy Xu(许洁莹)
                             </div>
                             <div class="detail-item">
                                 <span class="detail-label">职位状态：</span>职位进行中
@@ -680,11 +837,11 @@
                 <div class="subsection">
                     <div class="subsection-header">
                         <span class="subsection-title">人服机构使用概率</span>
-                        <span class="subsection-badge probability-high">极高</span>
+                        <span class="subsection-badge probability-confirmed">确认使用（可能性95%）</span>
                     </div>
                     <div class="subsection-content">
                         <div style="margin-bottom: 10px;">
-                            经过预测，企业有<a href="#" style="color: #1890ff; text-decoration: underline; font-weight: 600;">23个</a>人服机构正在合作中。
+                            经过预测，企业有<a href="#" class="positions-link">23个</a>人服机构正在合作中。
                         </div>
                         <div class="distribution-grid">
                             <div class="dist-row">
@@ -740,12 +897,22 @@
             <!-- 五、BD策略建议 -->
             <div class="section">
                 <div class="section-title">🎯 BD策略建议</div>
+                
+                <!-- 本团队可做岗位 -->
+                <div class="team-positions">
+                    <div class="positions-text">
+                        经匹配，本团队有 
+                        <span class="positions-link">5个</span> 
+                        可交付岗位。
+                    </div>
+                </div>
+                
                 <div class="strategy-content">
-                    <strong>重点突破建议：</strong>
-                    1. 优先推进RPO项目合作，该企业正处于快速扩张期，有大量招聘需求<br>
-                    2. 可从技术岗位切入，建立信任关系，研发类职位占比65%且平均薪资较高<br>
-                    3. 关注竞对华为、小米的人才流动，可做定向挖猎服务<br>
-                    4. 建议联系HR总监 Matt Dong，已有良好合作基础，可深化合作关系
+                    <ul class="strategy-list">
+                        <li class="strategy-item">优先推进RPO项目合作，该企业正处于快速扩张期，有大量招聘需求，研发类职位占比65%且平均薪资较高</li>
+                        <li class="strategy-item">可从技术岗位切入，建立信任关系，关注竞对华为、小米的人才流动，可做定向挖猎服务</li>
+                        <li class="strategy-item">建议联系HR总监 Matt Dong，已有良好合作基础，可深化合作关系，重点突破苏州和上海市场</li>
+                    </ul>
                 </div>
                 <div style="text-align: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e8e8e8;">
                     <span style="font-size: 12px; color: #999;">内容由AI生成，仅供参考</span>
@@ -774,14 +941,21 @@
             document.querySelector('.insight-panel').style.display = 'none';
         });
         
-        // 人服机构数量点击事件
-        document.querySelectorAll('a[href="#"]').forEach(link => {
+        // 可点击链接事件
+        document.querySelectorAll('.positions-link').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                console.log('查看人服机构详情');
-                // 这里可以弹出详情窗口或跳转到相关页面
+                const text = link.textContent;
+                if (text.includes('23')) {
+                    console.log('查看人服机构详情');
+                    // 跳转到人服机构列表页面
+                } else if (text.includes('5')) {
+                    console.log('查看可做岗位详情');
+                    // 跳转到可做岗位列表页面
+                }
             });
         });
     </script>
 </body>
 </html>
+                                
